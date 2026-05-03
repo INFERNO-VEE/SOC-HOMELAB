@@ -43,7 +43,8 @@ nmap -sV 192.168.56.103
 ```
 Key finding: Port 21 is running vsftpd 2.3.4 — a version known to contain a backdoor.
 
-![Nmap Scan](screenshots/nmap-scan.png)
+![Nmap Scan](01-vsftpd-backdoor/screenshots/nmap-scan.png)
+
 
 
 
@@ -74,11 +75,10 @@ set LHOST 192.168.56.102
 run
 ```
 Result:
-[+] 192.168.56.103:21 - Backdoor has been spawned!
-[*] Meterpreter session 1 opened (192.168.56.102:4444 → 192.168.56.103:55744)
+-192.168.56.103:21 - Backdoor has been spawned!
+-Meterpreter session 1 opened (192.168.56.102:4444 → 192.168.56.103:55744)
 
-![Meterpreter Session](screenshots/meterpreter-session.png)
-
+![Meterpreter Session](01-vsftpd-backdoor/screenshots/meterpreter-session.png)
 
 
 ## Step 5: Confirm Root Access
@@ -95,7 +95,7 @@ whoami: root
 
 Full root access was obtained without providing any credentials.
 
-![Root Access](screenshots/root-access.png)
+![Root Access](01-vsftpd-backdoor/screenshots/root-access.png)
 
 
 
@@ -115,10 +115,13 @@ What each command does:
 - netstat -antp — maps active network connections
 - ps aux — lists all running processes
 
-![Shadow File](screenshots/etc-shadow.png)
+![Shadow File](01-vsftpd-backdoor/screenshots/etc-shadow.png)
 
-![Netstat Output](screenshots/netstat-output.png)
+![Passwd File](01-vsftpd-backdoor/screenshots/etc-password.png)
 
+![Netstat Output](01-vsftpd-backdoor/screenshots/netstat-output.png)
+
+![PS Aux Output](01-vsftpd-backdoor/screenshots/ps-aux-output.png)
 
 
 ## Step 7: Check Wazuh for Detections
@@ -134,7 +137,8 @@ Wazuh generated 13 security events including:
 |5501   |PAM Login session opened        |Low (3)   |
 |5502   |PAM Login session closed        |Low (3)   |
 
-![Wazuh Security Events](screenshots/wazuh-security-events.png)
+![Wazuh Security Events](01-vsftpd-backdoor/screenshots/wazuh-security-events.png)
+
 
 ## Detection Insights
 
@@ -142,7 +146,7 @@ Wazuh generated 13 security events including:
 - Rule 5501/5502 (PAM Activity): Indicates session activity that may correlate with unauthorized access.
 - Rule 5402 (Privilege Escalation): Suggests elevated access, although in this case root access was obtained directly via exploitation.
 
-Key Insight:  
+**Key Insight:**  
 The most reliable indicator of compromise in this attack is the presence of port 6200, which is strongly associated with the vsftpd backdoor.
 
 
@@ -155,13 +159,13 @@ Wazuh automatically mapped the attack activity to MITRE ATT&CK tactics:
 - Discovery — T1087 Account Discovery, T1049 Network Connections Discovery
 - Credential Access — T1003 OS Credential Dumping
 
-![MITRE ATT&CK Dashboard](screenshots/wazuh-mitre-dashboard.png)
+![MITRE ATT&CK Dashboard](01-vsftpd-backdoor/screenshots/wazuh-mitre-dashboard.png)
 
 
 ## Analysis
 
 The attack successfully exploited a known backdoor in vsftpd 2.3.4, granting immediate root access without authentication. 
-From a defensive perspective, the exploitation itself was not directly detected by Wazuh. Instead, detection relied on behavioral indicators such as:
+From a defensive perspective, Wazuh did not directly detect the exploitation of vsftpd, but instead identified post-exploitation system behavior such as:
 - A new listening service (port 6200)
 - Privileged session activity
 - System-level command execution
@@ -234,3 +238,13 @@ Lessons Learned:
 |T1049       |System Network Connections Discovery |
 |T1057       |Process Discovery                    |
 
+
+## Conclusion
+
+This project demonstrated a full attack-to-detection lifecycle using a known vsftpd 2.3.4 backdoor vulnerability in a controlled lab environment. The attacker was able to gain root-level access without authentication, followed by post-exploitation activities such as system discovery and credential file access.
+
+From a defensive perspective, Wazuh did not directly detect the exploitation itself but successfully captured post-compromise system behavior through log telemetry. Key indicators such as the unexpected service on port 6200 and privilege-related events provided meaningful signals for investigation.
+
+The exercise highlights the importance of behavioral monitoring, log correlation, and SIEM-based detection in identifying threats that bypass traditional signature-based security controls. It also reinforces the need for timely patching, service hardening, and continuous monitoring of public-facing applications.
+
+Overall, this lab strengthened my understanding of how attackers operate post-compromise and how SOC analysts can detect and respond to such activity using SIEM tools and structured incident response processes.
