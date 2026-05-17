@@ -278,4 +278,4 @@ This project demonstrated a complete brute force attack lifecycle — from wordl
 
 The most important takeaway is the detection gap that exists without custom rules. Wazuh’s default rules detect individual authentication failures but don’t automatically recognize the brute force pattern. Writing Rule 100002 closed that gap by correlating multiple events into a single high-severity alert.
 
-This is detection engineering in practice — understanding how attacks work, identifying what evidence they leave behind, and writing rules that turn that evidence into actionable alerts. This skill is directly applicable to real SOC analyst work and is tested in both CySA+ and BTL1 certifications.
+This is detection engineering in practice — understanding how attacks work, identifying what evidence they leave behind, and writing rules that turn that evidence into actionable alerts. 
