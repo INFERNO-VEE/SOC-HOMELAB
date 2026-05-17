@@ -52,7 +52,7 @@ What each file contains:
 - passwords.txt — 7 passwords to try
 - Total combinations: 28 attempts
 
-![Wordlists Created](02-brute-force-detection/screenshots/wordlists.png)
+![Wordlists Created](screenshots/wordlists.png)
 
 
 
@@ -76,7 +76,7 @@ Result:
 
 Hydra successfully cracked the credentials after 20 attempts.
 
-![Hydra Output](02-brute-force-detection/screenshots/hydra-output.png)
+![Hydra Output](screenshots/hydra-output.png)
 
 
 
@@ -94,7 +94,7 @@ Wazuh detected 16 events — all Rule 2501:
 
 Key observation: Wazuh detected each individual failure but did not raise a high severity alert for the brute force pattern. This is the detection gap we will fix with a custom rule.
 
-![Initial Wazuh Detection](02-brute-force-detection/screenshots/initial-detection.png)
+![Initial Wazuh Detection](screenshots/initial-detection.png)
 
 
 
@@ -125,7 +125,7 @@ What each part means:
 
 Save with Ctrl+O → Enter, exit with Ctrl+X.
 
-![Custom Rule](02-brute-force-detection/screenshots/custom-rule.png)
+![Custom Rule](screenshots/custom-rule.png)
 
 
 
@@ -152,7 +152,7 @@ Results — 32 total hits:
 
 Custom Rule 100002 fired multiple times — once every 5 failed attempts within 30 seconds.
 
-![Custom Rule Firing](02-brute-force-detection/screenshots/custom-rule-firing.png)
+![Custom Rule Firing](screenshots/custom-rule-firing.png)
 
 
 
@@ -165,7 +165,7 @@ Navigate to Threat Hunting in Wazuh to see the full picture:
 - 3 authentication successes (valid credentials found)
 - MITRE ATT&CK: Brute Force technique detected
 
-![Threat Hunting Dashboard](02-brute-force-detection/screenshots/threat-hunting-dashboard.png)
+![Threat Hunting Dashboard](screenshots/threat-hunting-dashboard.png)
 
 
 
@@ -177,7 +177,7 @@ Navigate to Threat Hunting in Wazuh to see the full picture:
 |T1110.001   |Password Guessing|Hydra trying wordlist combinations            |
 |T1078       |Valid Accounts   |Successful login after cracking credentials   |
 
-![MITRE ATT&CK](02-brute-force-detection/screenshots/mitre-attack.png)
+![MITRE ATT&CK](screenshots/mitre-attack.png)
 
 
 
